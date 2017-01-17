@@ -8,11 +8,17 @@ module PageConfigurator
     end
 
     get '/pages' do
-        json = ConfigRepository.all.to_json
-        [200, { "Content-Type" => "application/json" }, [json]]
+        json = ConfigRepository.all
+        [200, { "Content-Type" => "application/json" }, [json.to_json]]
     end
 
     get '/pages/:id' do
+        json = ConfigRepository.search(params['id'])
+        if json.nil?
+            [404, { "Content-Type" => "application/json" }, [json.to_json]]
+        else
+            [200, { "Content-Type" => "application/json" }, [json.to_json]]
+        end
     end
 
     put '/pages/:id' do
