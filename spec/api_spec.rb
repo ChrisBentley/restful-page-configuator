@@ -7,6 +7,16 @@ module PageConfigurator
 
     let(:app) { PageConfigurator::Api.new }
 
+    describe 'GET /' do
+
+        it "returns_hello_world" do
+            get '/'
+            expect(last_response.ok?).to be true
+            expect(last_response.body).to eq('Hello World')
+        end
+
+    end
+
     describe 'GET /pages' do
     end
 

@@ -3,6 +3,10 @@ require 'json'
 
 module PageConfigurator
   class Api < Sinatra::Base
+    get '/' do
+        "Hello World"
+    end
+
     get '/pages' do
     end
 
