@@ -8,6 +8,8 @@ module PageConfigurator
     end
 
     get '/pages' do
+        json = ConfigRepository.all.to_json
+        [200, { "Content-Type" => "application/json" }, [json]]
     end
 
     get '/pages/:id' do
