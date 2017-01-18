@@ -17,6 +17,7 @@ module PageConfigurator
 
     describe 'GET /pages' do
         before do
+            ConfigRepository.initialize
             ConfigRepository.store('foo', 'some data')
         end
 
@@ -66,6 +67,7 @@ module PageConfigurator
 
     describe 'PUT /pages/foo' do
         before do
+            ConfigRepository.initialize
             ConfigRepository.store('foo', 'some data')
         end
 
@@ -100,6 +102,26 @@ module PageConfigurator
     end
 
     describe 'DELETE /pages/foo' do
+        before do
+            ConfigRepository.initialize
+            ConfigRepository.store('foo', 'some data')
+        end
+
+        it "returns a 200 (successful deletion) and the correct json response object for pages/foo" do
+            delete '/pages/foo'
+            expect(last_response.ok?).to be true
+            expect(last_response.status).to eq(200)
+            expect(last_response.headers['Content-Type']). to eq("text/plain")
+            expect(last_response.body).to eq('foo successfully deleted.')
+        end
+
+        it "returns a 404 (successful update) and the correct json response object for pages/foo" do
+            delete '/pages/foo_non_existant'
+            expect(last_response.ok?).to be false
+            expect(last_response.status).to eq(404)
+            expect(last_response.headers['Content-Type']). to eq("text/plain")
+            expect(last_response.body).to eq('Page not found.')
+        end
     end
   end
 end

@@ -48,6 +48,12 @@ module PageConfigurator
     end
 
     delete '/pages/:id' do
+        if ConfigRepository.search(params['id']).nil?
+            [404, { "Content-Type" => "text/plain" }, 'Page not found.']
+        else
+            ConfigRepository.remove(params['id'])
+            [200, { "Content-Type" => "text/plain" }, params['id'] + ' successfully deleted.']
+        end
     end
   end
 end
