@@ -31,3 +31,12 @@ Running the tests:
 From the root project directory run:
 
 	$ rspec --format doc
+
+
+Overview:
+
+The API implements all of the required web services that should be needed.
+
+The unit tests can all be ran using rspec as described above.
+
+A basic authorization has been implemented to protect all available routes provided by the API. I would have liked to implement a more complex solution to this and only protect the methods which could modify the contents (i.e. the put and delete requests).
