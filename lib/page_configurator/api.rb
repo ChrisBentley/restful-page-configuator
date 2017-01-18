@@ -9,11 +9,13 @@ module PageConfigurator
 
     get '/pages' do
         json = ConfigRepository.all
+
         [200, { "Content-Type" => "application/json" }, [json.to_json]]
     end
 
     get '/pages/:id' do
         json = ConfigRepository.search(params['id'])
+
         if json.nil?
             [404, { "Content-Type" => "text/plain" }, '404 not found']
         else
@@ -22,7 +24,6 @@ module PageConfigurator
     end
 
     put '/pages/:id' do
-
         if request.content_type != "application/json"
             return [406, { "Content-Type" => "text/plain" }, 'Content-Type must be application/json.']
         end
@@ -45,6 +46,13 @@ module PageConfigurator
     end
 
     post '/pages' do
+        json = ConfigRepository.db
+
+        if json == {}
+            [201, { "Content-Type" => "application/json" }, [json.to_json]]
+        else
+            [409, { "Content-Type" => "text/plain" }, '/pages already exists']
+        end
     end
 
     delete '/pages/:id' do

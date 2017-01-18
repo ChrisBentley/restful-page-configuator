@@ -8,7 +8,7 @@ module PageConfigurator
     let(:app) { PageConfigurator::Api.new }
 
     describe 'GET /' do
-        it "returns_hello_world" do
+        it "returns 'Hello World'" do
             get '/'
             expect(last_response.ok?).to be true
             expect(last_response.body).to eq('Hello World')
@@ -63,6 +63,25 @@ module PageConfigurator
     end
 
     describe 'POST /pages' do
+        before do
+            ConfigRepository.initialize
+        end
+
+        it "returns a 201 and the correct json response object for /pages" do
+            post '/pages'
+            expect(last_response.status).to eq(201)
+            expect(last_response.headers['Content-Type']). to eq("application/json")
+            expect(last_response.body).to eq('{}')
+        end
+
+        it "returns a 409 and the correct response message" do
+            ConfigRepository.store('foo', 'some data')
+            post '/pages'
+            expect(last_response.ok?).to be false
+            expect(last_response.status).to eq(409)
+            expect(last_response.headers['Content-Type']). to eq("text/plain")
+            expect(last_response.body).to eq('/pages already exists')
+        end
     end
 
     describe 'PUT /pages/foo' do
