@@ -15,7 +15,7 @@ module PageConfigurator
     get '/pages/:id' do
         json = ConfigRepository.search(params['id'])
         if json.nil?
-            [404, { "Content-Type" => "application/json" }, [json.to_json]]
+            [404, { "Content-Type" => "text/plain" }, '404 not found']
         else
             [200, { "Content-Type" => "application/json" }, [json.to_json]]
         end
@@ -49,7 +49,7 @@ module PageConfigurator
 
     delete '/pages/:id' do
         if ConfigRepository.search(params['id']).nil?
-            [404, { "Content-Type" => "text/plain" }, 'Page not found.']
+            [404, { "Content-Type" => "text/plain" }, '404 not found']
         else
             ConfigRepository.remove(params['id'])
             [200, { "Content-Type" => "text/plain" }, params['id'] + ' successfully deleted.']
