@@ -3,6 +3,11 @@ require 'json'
 
 module PageConfigurator
   class Api < Sinatra::Base
+
+    use Rack::Auth::Basic do |username, password|
+      username == 'admin' and password == 'nimda'
+    end
+
     get '/' do
         "Hello World"
     end

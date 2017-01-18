@@ -7,7 +7,18 @@ module PageConfigurator
 
     let(:app) { PageConfigurator::Api.new }
 
+    describe 'test without authentication' do
+        it "returns 401 (unauthorized)" do
+            get '/'
+            expect(last_response.status).to eq(401)
+        end
+      end
+
     describe 'GET /' do
+        before do
+            authorize 'admin', 'nimda'
+        end
+
         it "returns 'Hello World'" do
             get '/'
             expect(last_response.ok?).to be true
@@ -19,6 +30,7 @@ module PageConfigurator
         before do
             ConfigRepository.initialize
             ConfigRepository.store('foo', 'some data')
+            authorize 'admin', 'nimda'
         end
 
         it "returns a 200 and a correct json response object" do
@@ -35,6 +47,7 @@ module PageConfigurator
             ConfigRepository.initialize
             ConfigRepository.store('foo', 'some data')
             ConfigRepository.store('foo_two', 'more data')
+            authorize 'admin', 'nimda'
         end
 
         it "returns a 200 and the correct json response object for pages/foo" do
@@ -65,6 +78,7 @@ module PageConfigurator
     describe 'POST /pages' do
         before do
             ConfigRepository.initialize
+            authorize 'admin', 'nimda'
         end
 
         it "returns a 201 and the correct json response object for /pages" do
@@ -88,6 +102,7 @@ module PageConfigurator
         before do
             ConfigRepository.initialize
             ConfigRepository.store('foo', 'some data')
+            authorize 'admin', 'nimda'
         end
 
         it "returns a 200 (successful update) and the correct json response object for pages/foo" do
@@ -126,6 +141,7 @@ module PageConfigurator
         before do
             ConfigRepository.initialize
             ConfigRepository.store('foo', 'some data')
+            authorize 'admin', 'nimda'
         end
 
         it "returns a 200 (successful deletion) and the correct response message for pages/foo" do
