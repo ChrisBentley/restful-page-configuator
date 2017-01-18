@@ -65,6 +65,38 @@ module PageConfigurator
     end
 
     describe 'PUT /pages/foo' do
+        before do
+            ConfigRepository.store('foo', 'some data')
+        end
+
+        it "returns a 200 (successful update) and the correct json response object for pages/foo" do
+            put '/pages/foo', { 'value' => 'different data' }.to_json, "CONTENT_TYPE" => "application/json"
+            expect(last_response.ok?).to be true
+            expect(last_response.status).to eq(200)
+            expect(last_response.headers['Content-Type']). to eq("application/json")
+            expect(last_response.body).to eq('different data'.to_json)
+        end
+
+        it "returns a 201 (successful creation) and the correct json response object for pages/new_foo" do
+            put '/pages/new_foo', { 'value' => 'new data' }.to_json, "CONTENT_TYPE" => "application/json"
+            expect(last_response.status).to eq(201)
+            expect(last_response.headers['Content-Type']). to eq("application/json")
+            expect(last_response.body).to eq('new data'.to_json)
+        end
+
+        it "returns a 406 when the wrong content type is specified" do
+            put '/pages/new_foo', { 'value' => 'new data' }.to_json, "CONTENT_TYPE" => "text/plain"
+            expect(last_response.status).to eq(406)
+            expect(last_response.headers['Content-Type']). to eq("text/plain")
+            expect(last_response.body).to eq('Content-Type must be application/json.')
+        end
+
+        it "returns a 400 when the provided json is not parseable" do
+            put '/pages/new_foo', 'this isn\'t json', "CONTENT_TYPE" => "application/json"
+            expect(last_response.status).to eq(400)
+            expect(last_response.headers['Content-Type']). to eq("text/plain")
+            expect(last_response.body).to eq('Provided JSON was invalid.')
+        end
     end
 
     describe 'DELETE /pages/foo' do
